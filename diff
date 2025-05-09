@@ -1,0 +1,178 @@
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ACIP - Arquivos Classificados</title>
+  <style>
+    body {
+      background-color: #050608;
+      color: #66fcf1;
+      font-family: 'Courier New', Courier, monospace;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      padding: 10px 20px;
+      overflow: hidden;
+    }
+    .logo {
+      width: 250px;
+      opacity: 0.9;
+      margin-bottom: 5px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(102, 252, 241, 0.3);
+    }
+    .title-glitch {
+      font-size: 3rem;
+      color: #66fcf1;
+      text-shadow: 1px 0 red, -1px 0 blue;
+      filter: blur(0.7px);
+      margin-bottom: 5px;
+    }
+    h1 {
+      font-size: 2rem;
+      margin: 0.5rem 0;
+    }
+    .enigma-box {
+      background: #131a22;
+      padding: 1.2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 15px rgba(102, 252, 241, 0.3);
+      max-width: 600px;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      background: #050608;
+      color: #66fcf1;
+      border: 1px solid #45a29e;
+      border-radius: 5px;
+      margin-top: 1rem;
+    }
+    .hidden { display: none; }
+    .feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+      white-space: pre-wrap;
+    }
+    .glitch {
+      color: #ff4d4d;
+      animation: glitch 0.5s ease-in-out;
+    }
+    @keyframes glitch {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-2px); }
+      40% { transform: translateX(2px); }
+      60% { transform: translateX(-2px); }
+      80% { transform: translateX(2px); }
+      100% { transform: translateX(0); }
+    }
+    .static-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif') repeat;
+      opacity: 0.07;
+      mix-blend-mode: lighten;
+      animation: moveNoise 4s infinite ease-in-out alternate;
+    }
+    @keyframes moveNoise {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(10px, -10px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="static-bg"></div>
+  <div class="title-glitch">ACIP</div>
+  <img src="https://i.imgur.com/kCbc1dX.png" alt="Logo ACIP" class="logo"/>
+
+  <div class="enigma-box" id="fase1">
+    <h1>ARQUIVO CLASSIFICADO [001]</h1>
+    <p>“Não tenham medo da grandeza. Alguns nascem grandes, alguns conseguem a grandeza, e outros ███ █ ████████ ███████ █ ████”.<br> W.S</p>
+    <input type="text" id="resposta" placeholder="Digite sua resposta...">
+    <div id="feedback" class="feedback"></div>
+  </div>
+
+  <div class="enigma-box hidden" id="fase2">
+    <h1>ARQUIVO CLASSIFICADO [002]</h1>
+    <img src="https://i.imgur.com/kEeV6dF.png" alt="Ponte" style="width:100%; border-radius:10px; box-shadow:0 0 10px rgba(255,255,255,0.1); margin-bottom:1rem;"><br>
+    <input type="text" id="resposta2" placeholder="Digite sua resposta...">
+    <div id="feedback2" class="feedback"></div>
+  </div>
+
+  <audio id="cardSound" src="https://cdn.pixabay.com/audio/2022/10/13/audio_1098f3eb4f.mp3"></audio>
+
+  <script>
+    const respostaCerta = "MTk5NTg0NQ";
+    const respostaFase2 = "Sub umbra floreo";
+
+    const input = document.getElementById("resposta");
+    const feedback = document.getElementById("feedback");
+    const fase1 = document.getElementById("fase1");
+    const fase2 = document.getElementById("fase2");
+    const cardSound = document.getElementById("cardSound");
+
+    const input2 = document.getElementById("resposta2");
+    const feedback2 = document.getElementById("feedback2");
+
+    function typeEffect(element, text, speed, callback) {
+      element.textContent = "";
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(typing, speed);
+        } else if (callback) setTimeout(callback, 1000);
+      }
+      typing();
+    }
+
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        const valor = input.value.trim();
+        if (valor === respostaCerta) {
+          feedback.classList.remove('glitch');
+          feedback.style.color = '#66fcf1';
+          cardSound.play();
+          typeEffect(feedback, "ACESSO CONCEDIDO.", 75, () => {
+            fase1.classList.add("hidden");
+            fase2.classList.remove("hidden");
+          });
+        } else {
+          feedback.classList.add('glitch');
+          feedback.style.color = '#ff4d4d';
+          feedback.textContent = "ERRO 403";
+        }
+      }
+    });
+
+    input2.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        const valor = input2.value.trim();
+        if (valor === respostaFase2) {
+          feedback2.classList.remove('glitch');
+          feedback2.style.color = '#66fcf1';
+          cardSound.play();
+          typeEffect(feedback2, "ACESSO CONCEDIDO.", 75);
+        } else {
+          feedback2.classList.add('glitch');
+          feedback2.style.color = '#ff4d4d';
+          feedback2.textContent = "ERRO 403";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
